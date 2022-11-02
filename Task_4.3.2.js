@@ -12,9 +12,9 @@ const objState = {
 const str = "name";
 
 const myFnOne = function (str, obj) {
-  let a = 0;
+  let count = 0;
   for (const key in obj) {
-    key === str ? a++ : (a += 0);
+    key === str ? count++ : (count += 0);
   }
   a == 0
     ? console.log(false, `- У объекта нет свойства с именем "${str}"`)

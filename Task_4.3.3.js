@@ -2,9 +2,8 @@ const newObjWithProto = function () {
   const obj = {};
   return obj;
 };
-const newObjWithoutProto = function () {
-  const obj = Object.create(null);
-  return obj;
+const newObjWithoutProto = () => {
+  return Object.create(null);
 };
 
 console.log(newObjWithProto());
