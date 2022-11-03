@@ -1,29 +1,61 @@
-function ElectroDevice(power) {
-  (this.name = ""),
-    (this.voltage = 220),
-    (this.electicityTariff = 3.81), // RUB 1.82 night tariff
-    (this.power = power), // kWt
-    (this.getElectroCost = function () {
-      let ElectroCostHour = power * this.electicityTariff;
-      ElectroCostHour = Number(ElectroCostHour.toFixed(2));
-      let ElectroCostMinute = ElectroCostHour / 60;
-      ElectroCostMinute = Number(ElectroCostMinute.toFixed(2));
+function ElectroDevice(power, timeOn, timeOff) {
+  this.name = "",
+  this.voltage = 220,
+  this.electicityTariff = 3.81, // RUB 1.82 night tariff
+  this.power = power, // kWt
+  this.timeOn = timeOn,
+  this.timeOff = timeOff,
+  this.getElectroCost = function () {
+    let electroCostHour = power * this.electicityTariff;
+    electroCostHour = Number(electroCostHour.toFixed(2));
+    let electroCostMinute = electroCostHour / 60;
+    electroCostMinute = Number(electroCostMinute.toFixed(2));
+    console.log(
+      `На эксплуатацию "${this.name}" затрачивается ${electroCostHour} рублей за час работы или ${electroCostMinute} рублей в минуту`
+    );
+    return electroCostHour;
+  };
+  this.getCost = function () {
+    if (this.timeOn && this.timeOff) {
+      let getDate = (string) =>
+        new Date(0, 0, 0, string.split(":")[0], string.split(":")[1]);
+      let difference = getDate(timeOff) - getDate(timeOn);
+      let differenceResult, hours;
+      if (difference > 0) {
+        differenceResult = difference;
+        hours = Number(differenceResult / 3600000).toFixed(2);
+      } else {
+        differenceResult = Math.abs(getDate(timeOn) - getDate(timeOff));
+        hours = Number(24 - differenceResult / 3600000).toFixed(2);
+      }
+      let totalElectroCost = Number(
+        hours * power * this.electicityTariff
+      ).toFixed(2);
       console.log(
-        `На эксплуатацию "${this.name}" затрачивается ${ElectroCostHour} рублей за час работы или ${ElectroCostMinute} рублей в минуту`
+        `"${this.name}" проработал/a/о ${hours} часа/часов. В результате затрачено электроэнергии на ${totalElectroCost} руб.`
       );
-      return ElectroCostHour;
-    });
+      return totalElectroCost;
+    } else if (this.timeOn && !this.timeOff) {
+      console.log(
+        `"${this.name}" был/а/о включен/а/о в ${timeOn} и до сих пор работает`
+      );
+      return 0;
+    } else {
+      console.log(`"${this.name}" не работал/а/о`);
+      return 0;
+    }
+  };
 }
 
-const electroSauna = new ElectroDevice(9);
+const electroSauna = new ElectroDevice(9, "21:00", "00:35");
 electroSauna.name = "Электросауна";
 electroSauna.brandname = "Harvia";
 
-const backFlow = new ElectroDevice(4);
+const backFlow = new ElectroDevice(4, "23:37", "00:08");
 backFlow.name = "Противоток";
 backFlow.brandname = "Pahlen";
 
-const pumpFiltration = new ElectroDevice(0.55);
+const pumpFiltration = new ElectroDevice(0.55, "23:00");
 pumpFiltration.name = "Насос фильтрации";
 pumpFiltration.brandname = "АMERICA";
 
@@ -31,11 +63,11 @@ const pumpChildrenSlide = new ElectroDevice(0.45);
 pumpChildrenSlide.name = "Насос детской горки";
 pumpChildrenSlide.brandname = "Kripson Ninfa NK-33";
 
-const pumpJacuzzi = new ElectroDevice(2.2);
+const pumpJacuzzi = new ElectroDevice(2.2, "22:00", "23:55");
 pumpJacuzzi.name = "Насос джакузи";
 pumpJacuzzi.brandname = "Iberspa Jet 3 Steel";
 
-const underWaterLight = new ElectroDevice(0.3);
+const underWaterLight = new ElectroDevice(0.3, "22:00", "00:35");
 underWaterLight.name = "Подводное освещение";
 underWaterLight.brandname = "Pahlen";
 
@@ -43,7 +75,9 @@ const electroSaunaCost = electroSauna.getElectroCost();
 console.log("");
 console.log(electroSauna);
 
-console.log("____Оборудование для бассейна____");
+console.log(
+  "____________Оборудование для бассейна. Затраты эл/энергии за 1 час работы___________"
+);
 console.log("");
 const backFlowCost = backFlow.getElectroCost();
 const pumpFiltrationCost = pumpFiltration.getElectroCost();
@@ -51,7 +85,7 @@ const pumpChildrenSlideCost = pumpChildrenSlide.getElectroCost();
 const pumpJacuzziCost = pumpJacuzzi.getElectroCost();
 const underWaterLightCost = underWaterLight.getElectroCost();
 
-const totalCosts = Number(
+const totalCostsPerHour = Number(
   electroSaunaCost +
     backFlowCost +
     pumpFiltrationCost +
@@ -62,5 +96,49 @@ const totalCosts = Number(
 
 console.log("====================================================");
 console.log(
-  `ИТОГО: "Электрозатраты за 1 час активной эксплуатации частного бассейна составляют ${totalCosts} рублей.`
+  `ИТОГО: "Электрозатраты за 1 час активной эксплуатации частного бассейна составляют ${totalCostsPerHour} рублей.`
 );
+console.log("====================================================");
+console.log("");
+console.log(
+  "----------- Затраты эл/энергии на вечерний отдых в сауне и бассейне -----------------"
+);
+console.log("");
+console.log(electroSauna.getCost());
+console.log(backFlow.getCost());
+console.log(pumpFiltration.getCost());
+console.log(pumpChildrenSlide.getCost());
+console.log(pumpJacuzzi.getCost());
+console.log(underWaterLight.getCost());
+
+console.log(
+  "______________________________________________________________________________________"
+);
+console.log("");
+
+const electroSaunaCostForSession = +electroSauna.getCost();
+const backFlowCostForSession = +backFlow.getCost();
+const pumpFiltrationCostForSession = +pumpFiltration.getCost();
+const pumpChildrenSlideCostForSession = +pumpChildrenSlide.getCost();
+const pumpJacuzziCostForSession = +pumpJacuzzi.getCost();
+const underWaterLightCostForSession = +underWaterLight.getCost();
+
+const totalCostsForSession =
+  electroSaunaCostForSession +
+  backFlowCostForSession +
+  pumpFiltrationCostForSession +
+  pumpChildrenSlideCostForSession +
+  pumpJacuzziCostForSession +
+  underWaterLightCostForSession;
+
+console.log(
+  "======================================================================================="
+);
+console.log(
+  `ИТОГО: "Электрозатраты за один сеанс пользования сауны и бассейна составили ${totalCostsForSession} руб.`
+);
+console.log(
+  "======================================================================================="
+);
+
+
