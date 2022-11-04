@@ -1,21 +1,3 @@
-// let timeOn = "23:43";
-// let timeOff = "04:14";
-// let getDate = (string) =>
-//   new Date(0, 0, 0, string.split(":")[0], string.split(":")[1]);
-// let difference = getDate(timeOff) - getDate(timeOn);
-// let differenceResult, hours, minutes;
-// if (difference > 0) {
-//   differenceResult = difference;
-//   hours = Math.floor((differenceResult % 86400000) / 3600000);
-//   minutes = Math.round(((differenceResult % 86400000) % 3600000) / 60000);
-// } else {
-//   differenceResult = Math.abs(getDate(timeOn) - getDate(timeOff));
-//   hours = Math.floor(24 - (differenceResult % 86400000) / 3600000);
-//   minutes = Math.round(60 - ((differenceResult % 86400000) % 3600000) / 60000);
-// }
-
-// let result = hours + ":" + minutes;
-// console.log(result);
 
 class Parent {
   constructor(ownCity) {
