@@ -14,9 +14,9 @@ const str = "name";
 const myFnOne = function (str, obj) {
   let count = 0;
   for (const key in obj) {
-    key === str ? count++ : (count += 0);
+    key === str ? count++ : count += 0;
   }
-  a == 0
+  count == 0
     ? console.log(false, `- У объекта нет свойства с именем "${str}"`)
     : console.log(true, `- У объекта есть свойство с именем "${str}"`);
 };
